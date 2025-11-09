@@ -1,0 +1,92 @@
+{
+  "id": "slack-notifications",
+  "name": "Slack Notifications",
+  "version": "1.0.0",
+  "description": "Send notifications via Slack channels and direct messages using OAuth 2.0",
+  "author": "Kiket",
+  "license": "MIT",
+  "repository": "https://github.com/kiket-dev/kiket-ext-slack",
+  "capabilities": {
+    "notification_delivery": true,
+    "supports_channels": true,
+    "supports_dm": true,
+    "supports_group_chat": false,
+    "supports_rich_formatting": true,
+    "supports_attachments": true,
+    "supports_threading": true,
+    "supports_reactions": true
+  },
+  "endpoints": [
+    {
+      "id": "send_notification",
+      "path": "/notify",
+      "method": "POST",
+      "description": "Send a notification to Slack"
+    },
+    {
+      "id": "validate_channel",
+      "path": "/validate",
+      "method": "POST",
+      "description": "Validate Slack channel/user configuration"
+    },
+    {
+      "id": "health_check",
+      "path": "/health",
+      "method": "GET",
+      "description": "Health check endpoint"
+    }
+  ],
+  "configuration": {
+    "secrets": [
+      {
+        "key": "SLACK_BOT_TOKEN",
+        "description": "Slack Bot User OAuth Token (xoxb-...)",
+        "required": true
+      }
+    ],
+    "settings": [
+      {
+        "key": "default_message_format",
+        "description": "Default message format (mrkdwn or plain)",
+        "default": "mrkdwn",
+        "type": "string"
+      },
+      {
+        "key": "retry_attempts",
+        "description": "Number of retry attempts for failed deliveries",
+        "default": "3",
+        "type": "integer"
+      },
+      {
+        "key": "timeout_seconds",
+        "description": "Request timeout in seconds",
+        "default": "30",
+        "type": "integer"
+      },
+      {
+        "key": "link_names",
+        "description": "Find and link channel names and usernames",
+        "default": "true",
+        "type": "boolean"
+      }
+    ]
+  },
+  "billing": {
+    "model": "usage",
+    "metrics": [
+      {
+        "id": "notifications_sent",
+        "name": "Notifications Sent",
+        "unit": "notification",
+        "description": "Number of notifications successfully delivered"
+      }
+    ]
+  },
+  "tags": [
+    "notification",
+    "chat",
+    "slack",
+    "communication",
+    "team-collaboration"
+  ]
+}
