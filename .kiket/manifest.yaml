@@ -1,6 +1,6 @@
 model_version: "1.0"
 extension:
-  id: slack-notifications
+  id: dev.kiket.ext.slack
   name: Slack Notifications
   version: 1.0.0
   description: Send notifications via Slack channels and direct messages using OAuth 2.0
