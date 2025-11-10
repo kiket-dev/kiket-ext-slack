@@ -1,0 +1,5 @@
+version: 2
+
+models:
+  - name: slack_metrics_daily
+    description: "Daily Slack delivery metrics by channel"
