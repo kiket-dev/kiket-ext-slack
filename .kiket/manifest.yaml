@@ -1,0 +1,145 @@
+model_version: "1.0"
+extension:
+  id: slack-notifications
+  name: Slack Notifications
+  version: 1.0.0
+  description: Send notifications via Slack channels and direct messages using OAuth 2.0
+  author: Kiket Team
+  homepage: https://github.com/kiket-dev/kiket-ext-slack
+  delivery: http
+  callback:
+    url: ${EXTENSION_BASE_URL}
+    secret: env:KIKET_WEBHOOK_SECRET
+    timeout: 30000
+    required: true
+  activationEvents:
+    - issue.created
+    - issue.transitioned
+    - issue.assigned
+    - issue.commented
+    - workflow.sla_breach
+    - workflow.before_transition
+  permissions:
+    - issues:read
+    - users:read
+    - notifications:write
+    - workflows:read
+  capabilities:
+    - notifications
+    - chat
+    - direct-messages
+    - channels
+    - rich-formatting
+    - attachments
+    - threading
+    - reactions
+    - approvals
+  hooks:
+    - event: issue.created
+      timeout: 5000
+      retries: 1
+      description: Send notification when issue is created
+    - event: issue.transitioned
+      timeout: 5000
+      retries: 1
+      description: Send notification on issue state transitions
+    - event: issue.assigned
+      timeout: 5000
+      retries: 1
+      description: Notify users when assigned to issues
+    - event: issue.commented
+      timeout: 5000
+      retries: 1
+      description: Send notification for new comments
+    - event: workflow.sla_breach
+      timeout: 5000
+      retries: 2
+      description: Alert teams of SLA violations
+    - event: workflow.before_transition
+      timeout: 8000
+      retries: 1
+      description: Request approvals before workflow transitions
+  contributes:
+    commands:
+      - command: slack.sendMessage
+        title: Send Slack Message
+        description: Send a message to a Slack channel or user
+        category: Notifications
+        icon: bi-slack
+        keywords: ["slack", "chat", "message", "notify"]
+        handler:
+          type: extension_event
+          event: slack.sendMessage
+      - command: slack.sendThreadedMessage
+        title: Send Threaded Reply
+        description: Send a threaded reply to an existing message
+        category: Notifications
+        icon: bi-chat-dots
+        keywords: ["slack", "thread", "reply", "message"]
+        handler:
+          type: extension_event
+          event: slack.sendThreadedMessage
+      - command: slack.validateChannel
+        title: Validate Slack Channel
+        description: Test Slack channel or user configuration
+        category: Settings
+        icon: bi-check-circle
+        keywords: ["slack", "validate", "test", "channel"]
+        handler:
+          type: extension_event
+          event: slack.validateChannel
+      - command: slack.requestApproval
+        title: Request Approval in Slack
+        description: Send an interactive approval request
+        category: Workflows
+        icon: bi-hand-thumbs-up
+        keywords: ["slack", "approval", "workflow", "request"]
+        permissions:
+          - manager
+          - executive
+        handler:
+          type: extension_event
+          event: slack.requestApproval
+  configuration:
+    SLACK_BOT_TOKEN:
+      type: string
+      secret: true
+      description: Slack Bot User OAuth Token (xoxb-...)
+    default_message_format:
+      type: string
+      default: "mrkdwn"
+      description: Default message format (mrkdwn or plain)
+    retry_attempts:
+      type: integer
+      default: "3"
+      description: Number of retry attempts for failed deliveries
+    timeout_seconds:
+      type: integer
+      default: "30"
+      description: Request timeout in seconds
+    link_names:
+      type: boolean
+      default: "true"
+      description: Find and link channel names and usernames
+  assets:
+    icon: ./public/icon.svg
+
+deployment:
+  runtime: cloud_run
+  region: ${KIKET_REGION:-europe-west1}
+  image: ${SLACK_IMAGE:-europe-west1-docker.pkg.dev/kiket-471917/kiket-extensions/kiket-ext-slack:latest}
+  resources:
+    cpu: "1"
+    memory: "512Mi"
+    concurrency: 10
+  min_instances: 0
+  max_instances: 10
+  vpc:
+    connector: ${KIKET_VPC_CONNECTOR}
+    egress: all-traffic
+  secret_keys:
+    - KIKET_WEBHOOK_SECRET
+    - SLACK_BOT_TOKEN
+  env:
+    RACK_ENV: production
+    PORT: "9292"
