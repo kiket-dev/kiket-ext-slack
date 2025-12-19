@@ -108,6 +108,8 @@ extension:
     SLACK_BOT_TOKEN:
       type: string
       secret: true
+      required: true
+      label: Slack Bot Token
       description: Slack Bot User OAuth Token (xoxb-...)
     # General Settings
     default_message_format:
