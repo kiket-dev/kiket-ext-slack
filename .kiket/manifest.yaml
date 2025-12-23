@@ -132,21 +132,21 @@ extension:
     issue_created_message:
       type: template
       editor: template
-      language: handlebars
+      language: liquid
       label: Issue Created Message
       description: Slack message template for new issues
       default: |
         :ticket: *New Issue Created*
 
-        *{{issue.title}}*
-        Type: {{issue.type}} | Priority: {{issue.priority}}
-        Created by: {{issue.created_by.name}}
+        *{{ issue.title }}*
+        Type: {{ issue.type }} | Priority: {{ issue.priority }}
+        Created by: {{ issue.created_by.name }}
 
-        {{#if issue.description}}
-        > {{issue.description}}
-        {{/if}}
+        {% if issue.description %}
+        > {{ issue.description }}
+        {% endif %}
 
-        <{{issue.url}}|View Issue>
+        <{{ issue.url }}|View Issue>
       variables:
         - name: issue
           type: object
@@ -161,18 +161,18 @@ extension:
     sla_breach_message:
       type: template
       editor: template
-      language: handlebars
+      language: liquid
       label: SLA Breach Alert Message
       description: Urgent Slack message for SLA violations
       default: |
         :rotating_light: *SLA BREACH ALERT* :rotating_light:
 
-        *{{issue.title}}*
-        Policy: {{sla.policy_name}}
-        Target: {{sla.target_time}} | Actual: {{sla.actual_time}}
-        *Exceeded by: {{sla.exceeded_by}}*
+        *{{ issue.title }}*
+        Policy: {{ sla.policy_name }}
+        Target: {{ sla.target_time }} | Actual: {{ sla.actual_time }}
+        *Exceeded by: {{ sla.exceeded_by }}*
 
-        <{{issue.url}}|Take Action Now>
+        <{{ issue.url }}|Take Action Now>
       variables:
         - name: issue
           type: object
@@ -190,19 +190,19 @@ extension:
     approval_request_message:
       type: template
       editor: template
-      language: handlebars
+      language: liquid
       label: Approval Request Message
       description: Interactive approval request message
       default: |
         :clipboard: *Approval Required*
 
-        *{{issue.title}}*
-        Requested by: {{requester.name}}
-        Transition: {{transition.from}} → {{transition.to}}
+        *{{ issue.title }}*
+        Requested by: {{ requester.name }}
+        Transition: {{ transition.from }} → {{ transition.to }}
 
-        {{#if reason}}
-        > {{reason}}
-        {{/if}}
+        {% if reason %}
+        > {{ reason }}
+        {% endif %}
   assets:
     icon: ./public/icon.svg
 
