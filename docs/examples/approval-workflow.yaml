@@ -1,0 +1,25 @@
+title: Approval Request in Slack
+description: Request approval via interactive Slack message before transitioning issues
+
+automations:
+  - name: request_deployment_approval
+    trigger:
+      event: workflow.before_transition
+      conditions:
+        - field: transition.to
+          operator: eq
+          value: "deployed"
+        - field: issue.type
+          operator: eq
+          value: "Release"
+    actions:
+      - extension: dev.kiket.ext.slack
+        command: slack.requestApproval
+        params:
+          channel: "#releases"
+          approvers:
+            - role: manager
+            - role: tech-lead
+          template: approval_request_message
+          timeout_hours: 24
+          on_timeout: deny

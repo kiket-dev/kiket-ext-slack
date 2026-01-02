@@ -1,0 +1,17 @@
+title: SLA Breach Alert
+description: Send urgent alerts when SLA policies are breached
+
+automations:
+  - name: sla_breach_notification
+    trigger:
+      event: workflow.sla_breach
+    actions:
+      - extension: dev.kiket.ext.slack
+        command: slack.sendMessage
+        params:
+          channel: "#urgent-alerts"
+          template: sla_breach_message
+          format: mrkdwn
+          # Mention the on-call team
+          mention_users:
+            - "@oncall-team"
