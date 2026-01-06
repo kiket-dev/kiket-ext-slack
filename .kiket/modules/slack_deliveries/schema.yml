@@ -1,4 +1,4 @@
-module: slack_deliveries
+module: dev.kiket.ext.slack.deliveries
 version: "1.0"
 description: "Slack message delivery tracking"
 

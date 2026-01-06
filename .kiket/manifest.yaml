@@ -9,7 +9,7 @@ extension:
   delivery: http
   callback:
     url: ${EXTENSION_BASE_URL}
-    secret: env:KIKET_WEBHOOK_SECRET
+    secret: env.KIKET_WEBHOOK_SECRET
     timeout: 30000
     required: true
   activationEvents:
@@ -203,6 +203,84 @@ extension:
         {% if reason %}
         > {{ reason }}
         {% endif %}
+
+  # Setup Wizard - guides users through extension configuration
+  setup:
+    # Step 1: Slack Bot Token - references configuration key above
+    - secrets:
+        title: Connect to Slack
+        description: Enter your Slack Bot Token to enable notifications
+        required: true
+        help_url: https://api.slack.com/apps
+        collect:
+          - SLACK_BOT_TOKEN
+
+    # Step 2: Default Channel Configuration
+    - configure:
+        title: Configure Default Channel
+        description: Set up where notifications are sent by default
+        fields:
+          - key: default_channel
+            type: text
+            label: Default Channel
+            description: Channel ID or name for default notifications
+            placeholder: "#general or C01234567"
+            required: false
+          - key: link_names
+            type: boolean
+            label: Link Usernames
+            description: Automatically link @mentions and #channels
+            default: true
+          - key: default_message_format
+            type: select
+            label: Message Format
+            options:
+              - { value: mrkdwn, label: Slack Markdown }
+              - { value: plain, label: Plain Text }
+            default: mrkdwn
+
+    # Step 3: Test Connection
+    - test:
+        title: Test Connection
+        description: Send a test message to verify your Slack bot is working
+        action: slack.validateChannel
+        successMessage: Successfully connected to Slack! Check your channel for the test message.
+        required: false
+
+    # Step 4: Getting Started Info
+    - info:
+        title: Setup Complete
+        content: |
+          ## You're all set! 🎉
+
+          Your Slack integration is now configured. Here's what you can do:
+
+          - **Issue notifications** will appear in your configured channel
+          - **Approval requests** can be sent interactively
+          - **Threaded replies** keep conversations organized
+
+          ### Available Commands
+
+          - `/slack.sendMessage` - Send a message to any channel
+          - `/slack.requestApproval` - Send an interactive approval request
+
+          ### Tips
+
+          - Invite the bot to private channels for them to work
+          - Use threads for related notifications
+          - Enable reactions for quick acknowledgments
+        links:
+          - label: Slack App Settings
+            url: https://api.slack.com/apps
+            icon: gear
+          - label: Kiket Documentation
+            url: https://docs.kiket.dev/extensions/slack
+            icon: book
+
+  custom_data:
+    permissions:
+      - module: dev.kiket.ext.slack.deliveries
+        operations: [read, write]
   assets:
     icon: ./public/icon.svg
   hosting: internal
