@@ -104,11 +104,12 @@ extension:
           type: extension_event
           event: slack.requestApproval
   configuration:
-    # Authentication
+    # Authentication - org-wide credentials (shared across all projects)
     SLACK_BOT_TOKEN:
       type: string
       secret: true
       required: true
+      scope: extension
       label: Slack Bot Token
       description: Slack Bot User OAuth Token (xoxb-...)
     # General Settings
