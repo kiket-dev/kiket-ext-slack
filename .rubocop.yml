@@ -1,25 +1,25 @@
-inherit_from: ~
+# Extension-specific rubocop config
+# Does not inherit from parent (kiket repo uses rails-specific plugins)
+
+plugins:
+  - rubocop-rspec
 
 AllCops:
-  TargetRubyVersion: 3.4
   NewCops: enable
-  SuggestExtensions: false
+  TargetRubyVersion: 3.4
   Exclude:
     - 'vendor/**/*'
-    - 'tmp/**/*'
 
-Style/Documentation:
-  Enabled: false
-
-Metrics/MethodLength:
-  Max: 25
-
-Metrics/AbcSize:
-  Max: 20
-
-Metrics/ClassLength:
-  Max: 200
-
+# Relaxed settings for extension code
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
+
+RSpec/ExampleLength:
+  Max: 40
+
+RSpec/MultipleExpectations:
+  Max: 10
+
+RSpec/NestedGroups:
+  Max: 4
