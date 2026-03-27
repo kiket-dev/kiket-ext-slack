@@ -105,6 +105,43 @@ extension:
         handler:
           type: extension_event
           event: slack.requestApproval
+    workflow_actions:
+      - id: send_channel_message
+        name: Send Slack Channel Message
+        icon: bi-slack
+        description: Post a message to a Slack channel when a workflow state is entered or exited
+        handler:
+          type: extension_event
+          event: slack.workflowAction.sendChannelMessage
+        parameters:
+          - key: channel
+            type: string
+            label: Channel
+            placeholder: "#general or @user"
+            required: true
+          - key: message
+            type: string
+            label: Message
+            placeholder: "{{issue.title}} has moved to {{issue.status}}"
+            required: true
+      - id: request_approval
+        name: Request Slack Approval
+        icon: bi-hand-thumbs-up
+        description: Send an interactive approval request via Slack with approve/deny buttons
+        handler:
+          type: extension_event
+          event: slack.workflowAction.requestApproval
+        parameters:
+          - key: channel
+            type: string
+            label: Channel or User
+            placeholder: "#approvals or @manager"
+            required: true
+          - key: message
+            type: string
+            label: Request Message
+            placeholder: "Please review {{issue.title}}"
+            required: false
   configuration:
     # Authentication - org-wide credentials (shared across all projects)
     SLACK_BOT_TOKEN:
