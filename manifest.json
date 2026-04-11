@@ -82,11 +82,5 @@
       }
     ]
   },
-  "tags": [
-    "notification",
-    "chat",
-    "slack",
-    "communication",
-    "team-collaboration"
-  ]
+  "tags": ["notification", "chat", "slack", "communication", "team-collaboration"]
 }
