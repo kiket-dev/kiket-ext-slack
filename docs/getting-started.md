@@ -42,7 +42,7 @@ Add Slack notifications to your workflow automations:
 automations:
   - name: notify_on_issue_created
     trigger:
-      event: issue.created
+      event: case.created
     actions:
       - extension: dev.kiket.ext.slack
         command: slack.sendMessage
@@ -62,10 +62,10 @@ The extension includes default templates, but you can customize them:
 Example custom template:
 
 ```liquid
-:ticket: *New Issue*: {{ issue.title }}
-Priority: {{ issue.priority | default: "Normal" }}
-Assigned to: {{ issue.assignee.name | default: "Unassigned" }}
-<{{ issue.url }}|View in Kiket>
+:ticket: *New Issue*: {{ case.title }}
+Priority: {{ case.priority | default: "Normal" }}
+Assigned to: {{ case.assignee.name | default: "Unassigned" }}
+<{{ case.url }}|View in Kiket>
 ```
 
 ## Next Steps

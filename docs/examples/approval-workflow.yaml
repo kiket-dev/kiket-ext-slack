@@ -9,7 +9,7 @@ automations:
         - field: transition.to
           operator: eq
           value: "deployed"
-        - field: issue.type
+        - field: case.type
           operator: eq
           value: "Release"
     actions:

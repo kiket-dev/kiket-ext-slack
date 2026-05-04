@@ -4,9 +4,9 @@ description: Send a Slack message to a channel when new issues are created
 automations:
   - name: slack_new_issue_notification
     trigger:
-      event: issue.created
+      event: case.created
       conditions:
-        - field: issue.type
+        - field: case.type
           operator: in
           value: [Bug, Task, UserStory]
     actions:

@@ -15,10 +15,10 @@ extension:
     timeout: 30000
     required: true
   activationEvents:
-    - issue.created
-    - issue.transitioned
-    - issue.assigned
-    - issue.commented
+    - case.created
+    - case.transitioned
+    - case.assigned
+    - case.commented
     - workflow.sla_breach
     - workflow.before_transition
   permissions:
@@ -37,20 +37,20 @@ extension:
     - reactions
     - approvals
   hooks:
-    - event: issue.created
+    - event: case.created
       template: issue_created_message
       timeout: 5000
       retries: 1
       description: Send notification when issue is created
-    - event: issue.transitioned
+    - event: case.transitioned
       timeout: 5000
       retries: 1
       description: Send notification on issue state transitions
-    - event: issue.assigned
+    - event: case.assigned
       timeout: 5000
       retries: 1
       description: Notify users when assigned to issues
-    - event: issue.commented
+    - event: case.commented
       timeout: 5000
       retries: 1
       description: Send notification for new comments
@@ -122,7 +122,7 @@ extension:
           - key: message
             type: string
             label: Message
-            placeholder: "{{issue.title}} has moved to {{issue.status}}"
+            placeholder: "{{ case.title }} has moved to {{ case.status }}"
             required: true
       - id: request_approval
         name: Request Slack Approval
@@ -140,7 +140,7 @@ extension:
           - key: message
             type: string
             label: Request Message
-            placeholder: "Please review {{issue.title}}"
+            placeholder: "Please review {{ case.title }}"
             required: false
   configuration:
     # Authentication - org-wide credentials (shared across all projects)
@@ -178,17 +178,17 @@ extension:
       default: |
         :ticket: *New Issue Created*
 
-        *{{ issue.title }}*
-        Type: {{ issue.type }} | Priority: {{ issue.priority }}
-        Created by: {{ issue.created_by.name }}
+        *{{ case.title }}*
+        Type: {{ case.type }} | Priority: {{ case.priority }}
+        Created by: {{ case.created_by.name }}
 
-        {% if issue.description %}
-        > {{ issue.description }}
+        {% if case.description %}
+        > {{ case.description }}
         {% endif %}
 
-        <{{ issue.url }}|View Issue>
+        <{{ case.url }}|View Issue>
       variables:
-        - name: issue
+        - name: case
           type: object
           properties:
             - { name: id, type: number }
@@ -207,14 +207,14 @@ extension:
       default: |
         :rotating_light: *SLA BREACH ALERT* :rotating_light:
 
-        *{{ issue.title }}*
+        *{{ case.title }}*
         Policy: {{ sla.policy_name }}
         Target: {{ sla.target_time }} | Actual: {{ sla.actual_time }}
         *Exceeded by: {{ sla.exceeded_by }}*
 
-        <{{ issue.url }}|Take Action Now>
+        <{{ case.url }}|Take Action Now>
       variables:
-        - name: issue
+        - name: case
           type: object
         - name: sla
           type: object
@@ -225,7 +225,7 @@ extension:
             - { name: exceeded_by, type: string }
       validation:
         required_variables:
-          - issue.title
+          - case.title
           - sla.policy_name
     approval_request_message:
       type: template
@@ -236,7 +236,7 @@ extension:
       default: |
         :clipboard: *Approval Required*
 
-        *{{ issue.title }}*
+        *{{ case.title }}*
         Requested by: {{ requester.name }}
         Transition: {{ transition.from }} → {{ transition.to }}
 
