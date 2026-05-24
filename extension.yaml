@@ -1,0 +1,21 @@
+apiVersion: kiket.dev/v1
+kind: Extension
+metadata:
+  key: slack
+  name: Slack Evidence Adapter
+  version: 1.0.0
+  description: Normalize Slack approval and discussion messages into Kiket evidence.
+spec:
+  sourceSystem: slack
+  ingestionScopes:
+    - raw-events:write
+    - evidence:write
+  sourceEventTypes:
+    - event_callback
+    - message
+  evidenceTypes:
+    - slack_message
+    - slack_approval
+  retentionHints:
+    rawDays: 30
+    evidenceDays: 365
