@@ -1,7 +1,7 @@
 apiVersion: kiket.dev/v1
 kind: Extension
 metadata:
-  key: slack
+  key: kiket-ext-slack
   name: Slack Evidence Adapter
   version: 1.0.0
   description: Normalize Slack approval and discussion messages into Kiket evidence.
